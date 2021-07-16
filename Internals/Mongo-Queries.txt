@@ -1,0 +1,21 @@
+Query 1 - Demonstrate the usage of $match, $group, aggregate pipelines.
+
+db.employees.aggregate({$match:{eligibleForPayraise:true}}, {$group:{_id:"$name",salary:{$sum:"$salary"}}})
+
+Query 2 - Demonstrate the Map-Reduce aggregate function on this dataset.
+
+var mapper =function(){emit(this.name,this.salary)};
+var reducer = function(name,salary){return Array.sum(salary);}
+db.employees.mapReduce(mapper,reducer,{out:"res"})
+db.res.find({}).pretty()
+
+Query 3 - Find out all the Employees, who are paying tax>50000 and are not eligible for pay raise. 
+
+db.employees.find({$and: [{tax: {$gt:50000}},{eligibleForPayraise:false }]}).pretty()
+
+Query 4 - Demonstrate the Alter and Drop commands on this dataset. 
+Alter -
+db.employees.updateOne({name:'Ross'},{$set:{yearsOfService:7}})
+Drop -
+show collections
+db.res.drop()
